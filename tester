@@ -1,0 +1,86 @@
+#!/bin/bash
+
+function main {
+	# "$1" is expected to be the source file
+	# "$2" is expected to be the number of tests
+	
+	if [ "$1" != "" -a "$2" -eq "$2" 2>/dev/null ]; then
+		generator $2
+		outputter $2
+		checker $2 $1
+
+		echo "All's done."
+	else
+		if [ "$1" != "" -a "$2" != "" ]; then
+			echo "Invalid parameters."
+		else
+			if [ "$1" != "" ]; then
+				echo "How many tests?"
+			else
+				echo "How many tests and what file?"
+			fi
+		fi
+	fi
+}
+
+function generator {
+	echo "Generating $1 tests..."
+
+	# create folder with tests
+	mkdir -p ./tests;
+	rm -r ./tests/
+	mkdir -p ./tests;
+	
+	# generate tests based on generator.cpp
+	g++ -std=c++11 -DONLINE_JUDGE generator.cpp -o generator
+	for ((i=1; i<=$1; i++)) do
+		./generator "./tests/$i.in" > ./tests/$i.in
+	done
+
+	echo "All $1 tests have been generated."
+}
+
+function outputter {
+	echo "Generating $1 valid outputs..."
+
+	# generate valid outputs based on the brute source file brut.cpp
+	g++ -std=c++11 -DONLINE_JUDGE brut.cpp -o brut
+	for ((i=1; i<=$1; i++)) do
+		./brut < ./tests/$i.in > ./tests/$i.ok
+	done
+
+	echo "All $1 valid outputs have been generated."
+}
+
+function checker {
+	echo "Checking source..."
+
+	# set colours
+	RED=`tput setaf 1`
+	GREEN=`tput setaf 2`
+	RESET=`tput sgr0`
+
+	ok=1
+
+	# generate outputs for the tested source file and compare them with the .ok files
+	g++ -std=c++11 -DONLINE_JUDGE $2.cpp -o $2
+	for ((i=1; i<=$1; i++)) do
+		./$2 < ./tests/$i.in > ./tests/$i.out
+		if diff -q ./tests/$i.ok ./tests/$i.out > /dev/null ; then 
+			echo "Test $i has ${GREEN}passed${RESET}!"
+		else 
+			echo "Test $i has ${RED}failed${RESET}!"
+			ok=0
+		fi
+	done
+
+	echo "All $1 tests have been checked."
+
+	if [ "$ok" != "0" ]; then
+		echo "All tests have ${GREEN}PASSED${RESET}. Good job!"
+	else
+		echo "Some tests have ${RED}FAILED${RESET}."
+	fi
+}
+
+main $1 $2
