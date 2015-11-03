@@ -1,5 +1,5 @@
 # SelfChecker
-Script to check the correctness of a source file (for competitive programming).<br/>
+Script to check the correctness of a source file, for competitive programming (August 2015).<br/>
 
 I wrote the script for self-use, but in fact anybody is free to use it or improve it. <br/>
 I usually use the script in competitive programming problems when I implement a solution that I think is efficient in terms of execution time and memory, but I want to check if it gives correct answers all the time. So I implement a generator of random test cases with small input, a brute solution with bad complexity (but which surely gives good answers) and I run the script to check where my supposedly efficient source file fails in correctness.
