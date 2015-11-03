@@ -18,7 +18,6 @@ I usually use the script in competitive programming problems when I implement a 
 4. See where it fails.
 
 <img src="http://i68.tinypic.com/4se72w.jpg"/><br/>
-
 <i>If everything is all right, it should look like this :-) </i>
 
 ### Some mentions:
